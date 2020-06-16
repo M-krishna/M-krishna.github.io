@@ -6,10 +6,55 @@
     <description>Recent content in Tags on Welcome</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 10 Jun 2020 19:39:54 +0530</lastBuildDate>
+    <lastBuildDate>Mon, 15 Jun 2020 10:43:59 +0530</lastBuildDate>
     
 	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>cli</title>
+      <link>/tags/cli/</link>
+      <pubDate>Mon, 15 Jun 2020 10:43:59 +0530</pubDate>
+      
+      <guid>/tags/cli/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>concurrency</title>
+      <link>/tags/concurrency/</link>
+      <pubDate>Mon, 15 Jun 2020 10:43:59 +0530</pubDate>
+      
+      <guid>/tags/concurrency/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>github</title>
+      <link>/tags/github/</link>
+      <pubDate>Mon, 15 Jun 2020 10:43:59 +0530</pubDate>
+      
+      <guid>/tags/github/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>golang</title>
+      <link>/tags/golang/</link>
+      <pubDate>Mon, 15 Jun 2020 10:43:59 +0530</pubDate>
+      
+      <guid>/tags/golang/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>goroutines</title>
+      <link>/tags/goroutines/</link>
+      <pubDate>Mon, 15 Jun 2020 10:43:59 +0530</pubDate>
+      
+      <guid>/tags/goroutines/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>go</title>

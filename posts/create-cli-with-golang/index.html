@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>Creating CLI With Golang :: Welcome</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<meta name="description" content="This post shows you how to create a cli (Command Line Interface) in golang. We are gonna use Github&#39;s public API to create a github-cli, which shows you info about users. We are not gonna use any third party packages.
+ source code for this post https://github.com/M-krishna/github-cli Introduction The goal here is to capture the usernames from the argument and iterate over it until the data fetched from the server. We will make the fetching process concurrent by using Goroutines." />
+<meta name="keywords" content="" />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="/posts/create-cli-with-golang/" />
+
+
+
+
+<link rel="stylesheet" href="/assets/style.css">
+
+  <link rel="stylesheet" href="/assets/green.css">
+
+
+
+
+
+
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/img/apple-touch-icon-144-precomposed.png">
+
+  <link rel="shortcut icon" href="/img/favicon/green.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  <meta name="twitter:site" content="" />
+
+<meta name="twitter:creator" content="Krishna" />
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Creating CLI With Golang :: Welcome">
+<meta property="og:description" content="This post shows you how to create a cli (Command Line Interface) in golang. We are gonna use Github&#39;s public API to create a github-cli, which shows you info about users. We are not gonna use any third party packages.
+ source code for this post https://github.com/M-krishna/github-cli Introduction The goal here is to capture the usernames from the argument and iterate over it until the data fetched from the server. We will make the fetching process concurrent by using Goroutines." />
+<meta property="og:url" content="/posts/create-cli-with-golang/" />
+<meta property="og:site_name" content="Creating CLI With Golang" />
+
+  <meta property="og:image" content="/github-cli.png">
+
+<meta property="og:image:width" content="2048">
+<meta property="og:image:height" content="1024">
+
+
+  <meta property="article:published_time" content="2020-06-15 10:43:59 &#43;0530 IST" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="">
+
+
+<div class="container center headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Terminal
+  </div>
+</a>
+
+    </div>
+    <div class="menu-trigger">menu</div>
+  </div>
+  
+    <nav class="menu">
+  <ul class="menu__inner menu__inner--desktop">
+    
+      
+        
+          <li><a href="/about">About</a></li>
+        
+      
+        
+          <li><a href="/posts">Posts</a></li>
+        
+      
+      
+    
+
+    
+  </ul>
+
+  <ul class="menu__inner menu__inner--mobile">
+    
+      
+        <li><a href="/about">About</a></li>
+      
+    
+      
+        <li><a href="/posts">Posts</a></li>
+      
+    
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<div class="post">
+  <h1 class="post-title">
+    <a href="/posts/create-cli-with-golang/">Creating CLI With Golang</a></h1>
+  <div class="post-meta">
+    
+      <span class="post-date">
+        2020-06-15 
+      </span>
+    
+    
+    <span class="post-author">::
+      Krishna
+    </span>
+    
+  </div>
+
+  
+  <span class="post-tags">
+    
+    #<a href="/tags/cli/">cli</a>&nbsp;
+    
+    #<a href="/tags/concurrency/">concurrency</a>&nbsp;
+    
+    #<a href="/tags/golang/">golang</a>&nbsp;
+    
+    #<a href="/tags/github/">github</a>&nbsp;
+    
+    #<a href="/tags/goroutines/">goroutines</a>&nbsp;
+    
+  </span>
+  
+
+  
+    <img src="/github-cli.png" class="post-cover" />
+  
+
+  
+
+  <div class="post-content"><div>
+        <p>This post shows you how to create a <strong><code>cli</code></strong> (Command Line Interface) in golang. We are gonna use <code>Github's public API</code> to create 
+a github-cli, which shows you info about users. We are not gonna use any third party packages.</p>
+<blockquote>
+<p>source code for this post <!-- raw HTML omitted --><a href="https://github.com/M-krishna/github-cli">https://github.com/M-krishna/github-cli</a><!-- raw HTML omitted --></p>
+</blockquote>
+<h1 id="introduction">Introduction<a href="#introduction" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<p>The goal here is to capture the <code>usernames</code> from the <code>argument</code> and <code>iterate</code> over it until the data fetched from the server.
+We will make the fetching process <strong><code>concurrent</code></strong> by using <strong><code>Goroutines</code></strong>.</p>
+<h1 id="reading-command-line-arguments">Reading command line arguments<a href="#reading-command-line-arguments" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<p>We are gonna use the <a href="https://golang.org/pkg/flag/"><code>flag</code></a> package from the standard library.</p>
+<p>The reason for using the <code>flag</code> package is that, we can add any number of flags we want. The flag package does every thing from 
+<code>adding</code> to <code>parsing</code>.</p>
+<p>Before adding any flags we want to tell the user about the <strong><code>usage</code></strong> of this <code>CLI</code>. <strong><code>Usage</code></strong> prints a usage message 
+documenting all defined <code>command-line flag's</code> to <code>commandLine's output</code>.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// main.go
+</span><span style="color:#75715e"></span>
+<span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
+
+<span style="color:#f92672">import</span> (
+    <span style="color:#e6db74">&#34;flag&#34;</span>
+    <span style="color:#e6db74">&#34;os&#34;</span>
+)
+
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">Users</span> <span style="color:#66d9ef">string</span>
+
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">init</span>() {
+    <span style="color:#66d9ef">const</span> (
+    		<span style="color:#a6e22e">usage</span> = <span style="color:#e6db74">&#34;Search User (Eg. john) or (Eg. john,foo,bar)&#34;</span>
+    	)
+    <span style="color:#a6e22e">flag</span>.<span style="color:#a6e22e">StringVar</span>(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">Users</span>, <span style="color:#e6db74">&#34;u&#34;</span>, <span style="color:#e6db74">&#34;&#34;</span>, <span style="color:#a6e22e">usage</span>)
+}
+</code></pre></div><p>In the <code>init</code> function, we are creating a <code>const variable</code> usage which holds the documentation of our flag. On the next line 
+we are passing some data to <a href="https://golang.org/pkg/flag/#StringVar"><code>StringVar</code></a> function. <code>StringVar</code> function takes in 4 
+arguments.</p>
+<pre><code>func StringVar (p *string, name string, value string, usage string)
+</code></pre>
+<ul>
+<li>The first argument stores the value of the flag.</li>
+<li>The second one is the name of the flag. In our case it&rsquo;s <code>u</code>.</li>
+<li>The third argument is the default value of the flag. In our case there are no default values.</li>
+<li>The last argument is the usage of the flag.</li>
+</ul>
+<h1 id="parsing-the-flag">Parsing the flag.<a href="#parsing-the-flag" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<p>The next step is to <code>parse</code> the <code>flag</code>, So that we can access the data which user provided. The flag package comes in handy 
+with <a href="https://golang.org/pkg/flag/#Parse"><code>Parse</code></a> function. The <code>Parse</code> function must be called after all flags
+are defined and before flags are accessed by the program.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// main.go
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+    <span style="color:#a6e22e">flag</span>.<span style="color:#a6e22e">Parse</span>() 
+}
+</code></pre></div><p>The next step is to check whether the user provides the value for the flag.</p>
+<p>We can do the using <a href="https://golang.org/pkg/flag/#NFlag"><code>NFlag</code></a> function. This function returns the <code>number of  command-line flags</code> that have been set. If it <code>returns 0</code> that means the user has not provided any value for the flag, 
+In this case we can tell the usage of the flag to the user.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// main.go 
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">flag</span>.<span style="color:#a6e22e">NFlag</span>() <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> {
+    <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;Usage: %s [options]\n&#34;</span>, <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Args</span>[<span style="color:#ae81ff">0</span>])
+    <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;Options:&#34;</span>)
+    <span style="color:#a6e22e">flag</span>.<span style="color:#a6e22e">PrintDefaults</span>()
+    <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Exit</span>(<span style="color:#ae81ff">1</span>)
+}
+</code></pre></div><p>In the above code snippet we are printing out the usage of the flag. We are using a new function 
+<a href="https://golang.org/pkg/flag/#PrintDefaults"><code>PrintDefaults</code></a>. <code>PrintDefaults</code> prints to standard error unless
+configured otherwise, a usage message showing the default settings of all defined command-line flags. After printing out 
+the default usage we are exiting the program.</p>
+<h1 id="searching-users">Searching users<a href="#searching-users" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<p>Now we have the <code>usernames</code> from the <code>command-line flag</code>. Since it&rsquo;s a string separated by <code>commas</code>, We have to split the string
+which in turn gives us a <code>slice of string</code>.</p>
+<p>But before that we have get the data from the flag.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// main.go
+</span><span style="color:#75715e"></span>
+<span style="color:#f92672">import</span> <span style="color:#e6db74">&#34;strings&#34;</span>
+
+<span style="color:#a6e22e">userResult</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">strings</span>.<span style="color:#a6e22e">Split</span>(<span style="color:#a6e22e">Users</span>, <span style="color:#e6db74">&#34;,&#34;</span>)
+<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;Searching user(s): %s\n&#34;</span>, <span style="color:#a6e22e">userResult</span>)
+</code></pre></div><p>Next we have to <code>iterate</code> over the slice of usernames, and we have to pass these usernames to <code>Github API</code>. To do that we are
+gonna create a separate function. Let&rsquo;s name it <code>GetUserFromGithub</code>. We&rsquo;ll pass the username to this function, and the
+function will print the details about the user.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// main.go
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">username</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">userResult</span> {
+    <span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">username</span>) &gt; <span style="color:#ae81ff">1</span> {
+       <span style="color:#a6e22e">GetUserFromGithub</span>(<span style="color:#a6e22e">username</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">wg</span>)
+    }
+}
+</code></pre></div><p><!-- raw HTML omitted --></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// Separate file for GetUserFromGithub function. (cli.go)
+</span><span style="color:#75715e"></span>
+<span style="color:#f92672">package</span> <span style="color:#a6e22e">cli</span>
+
+<span style="color:#f92672">import</span> (
+	<span style="color:#e6db74">&#34;encoding/json&#34;</span>
+	<span style="color:#e6db74">&#34;fmt&#34;</span>
+	<span style="color:#e6db74">&#34;io/ioutil&#34;</span>
+	<span style="color:#e6db74">&#34;net/http&#34;</span>
+	<span style="color:#e6db74">&#34;os&#34;</span>
+)
+
+<span style="color:#66d9ef">const</span> (
+	<span style="color:#a6e22e">baseURL</span> = <span style="color:#e6db74">&#34;https://api.github.com/users/&#34;</span>
+)
+
+<span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Response</span> <span style="color:#66d9ef">struct</span> {
+	<span style="color:#a6e22e">Login</span>              <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`json:&#34;login&#34;`</span>
+	<span style="color:#a6e22e">Avatar</span>             <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`json:&#34;avatar_url&#34;`</span>
+	<span style="color:#a6e22e">URL</span>                <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`json:&#34;url&#34;`</span>
+	<span style="color:#a6e22e">Name</span>               <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`json:&#34;name&#34;`</span>
+	<span style="color:#a6e22e">Company</span>            <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`json:&#34;company&#34;`</span>
+	<span style="color:#a6e22e">Location</span>           <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`json:&#34;location&#34;`</span>
+	<span style="color:#a6e22e">Bio</span>                <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`json:&#34;bio&#34;`</span>
+	<span style="color:#a6e22e">PublicRepositories</span> <span style="color:#66d9ef">int</span>    <span style="color:#e6db74">`json:&#34;public_repos&#34;`</span>
+	<span style="color:#a6e22e">Followers</span>          <span style="color:#66d9ef">int</span>    <span style="color:#e6db74">`json:&#34;followers&#34;`</span>
+	<span style="color:#a6e22e">Following</span>          <span style="color:#66d9ef">int</span>    <span style="color:#e6db74">`json:&#34;following&#34;`</span>
+}
+
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">GetUserFromGithub</span>(<span style="color:#a6e22e">name</span> <span style="color:#66d9ef">string</span>) {
+
+	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">responseBody</span> <span style="color:#a6e22e">Response</span>
+
+	<span style="color:#a6e22e">resp</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">Get</span>(<span style="color:#a6e22e">baseURL</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">name</span>)
+	<span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">resp</span>.<span style="color:#a6e22e">Body</span>.<span style="color:#a6e22e">Close</span>()
+
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;The HTTP request failed with error %s\n&#34;</span>, <span style="color:#a6e22e">err</span>)
+		<span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Exit</span>(<span style="color:#ae81ff">1</span>)
+	}
+
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">resp</span>.<span style="color:#a6e22e">StatusCode</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">200</span> {
+		<span style="color:#a6e22e">responseData</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">ioutil</span>.<span style="color:#a6e22e">ReadAll</span>(<span style="color:#a6e22e">resp</span>.<span style="color:#a6e22e">Body</span>)
+		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+			<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;Failed reading data from the response %s\n&#34;</span>, <span style="color:#a6e22e">err</span>)
+			<span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Exit</span>(<span style="color:#ae81ff">1</span>)
+		}
+
+		<span style="color:#a6e22e">json</span>.<span style="color:#a6e22e">Unmarshal</span>(<span style="color:#a6e22e">responseData</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">responseBody</span>)
+
+		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;#######################################&#34;</span>)
+		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;Name: &#34;</span>, <span style="color:#a6e22e">responseBody</span>.<span style="color:#a6e22e">Name</span>)
+		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;Login: &#34;</span>, <span style="color:#a6e22e">responseBody</span>.<span style="color:#a6e22e">Login</span>)
+		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;Avatar: &#34;</span>, <span style="color:#a6e22e">responseBody</span>.<span style="color:#a6e22e">Avatar</span>)
+		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;URL: &#34;</span>, <span style="color:#a6e22e">responseBody</span>.<span style="color:#a6e22e">URL</span>)
+		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;Company: &#34;</span>, <span style="color:#a6e22e">responseBody</span>.<span style="color:#a6e22e">Company</span>)
+		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;Location: &#34;</span>, <span style="color:#a6e22e">responseBody</span>.<span style="color:#a6e22e">Location</span>)
+		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;Bio: &#34;</span>, <span style="color:#a6e22e">responseBody</span>.<span style="color:#a6e22e">Bio</span>)
+		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;Followers: &#34;</span>, <span style="color:#a6e22e">responseBody</span>.<span style="color:#a6e22e">Followers</span>)
+		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;Following: &#34;</span>, <span style="color:#a6e22e">responseBody</span>.<span style="color:#a6e22e">Following</span>)
+		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;########################################&#34;</span>)
+	} <span style="color:#66d9ef">else</span> {
+		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;%s not found\n&#34;</span>, <span style="color:#a6e22e">name</span>)
+	}
+}
+</code></pre></div><p>The above piece of code is lot to <code>digest</code>. Let&rsquo;s break it down. We have Github API endpoint as our <code>baseURL</code>.</p>
+<p>Next we have our <code>Response struct</code> which holds info about the user. In that struct we also have <code>json</code> fields because 
+we are getting <code>json</code> response from the Github API.</p>
+<p>Next we have our <code>GetUserFromGithub</code> function which takes in the <code>username</code>. Here we are creating <code>responseBody</code>
+variable with the type of <code>Response</code>, so that we can hold our response into this variable.</p>
+<p>Then we are using <code>http Get</code> method to call the API with username. Here we are using the <code>net/http</code> package from
+the standard library. This returns response (<code>*Response</code> ) and an error.</p>
+<p>Next we are closing the response body by calling <code>Close()</code> method. We are using <code>defer</code> keyword so that it runs
+after the main function. To learn more about defer <a href="https://gobyexample.com/defer"><code>click here</code></a>.</p>
+<p>Then we are checking if there are any error, if so, we are exiting out of the program. If the response is success, we are
+reading the data from the response body by using <code>ReadAll</code> function from <a href="https://golang.org/pkg/io/ioutil/"><code>ioutil</code></a> 
+package. This returns the response as slice of <code>byte</code> and an error.</p>
+<p>Now we have the response data which is of type <code>[]byte</code>. To convert the data into moe readable format, we can use 
+<a href="https://golang.org/pkg/encoding/json/#Unmarshal"><code>json.Unmarshal</code></a> function. The <code>json.Unmarshal</code> function takes 
+in a <code>[]byte</code> and an interface. <code>Unmarshal</code> parses <code>JSON-encoded</code> data and stores the result in the value pointed to
+by v (<code>interface</code>). In our case, the data will be stored on <code>responseBody</code>.</p>
+<p>Finally we are printing the data to the standard output(<code>stdout</code>).</p>
+<p><img src="/github-cli-without-goroutine.gif" alt="github-cli-without-goroutines"></p>
+<h1 id="making-it-concurrent">Making it concurrent<a href="#making-it-concurrent" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<p>Till now our program is not <code>concurrent</code>, which means if the user provides huge number of <code>usernames</code> our program will process it
+one by one.</p>
+<p>For example, if the user gives <code>a,b,c,d</code> as input, our program first process <code>a</code> and after finish processing <code>a</code> it will
+continue to process <code>b</code> and after finish processing <code>b</code> it will continue to process <code>c</code> and so on. This will
+be time-consuming if the number of usernames are high. Although the process of our <code>GetUserFromGithub</code> function is 
+not so heavy, we&rsquo;ll speed it up a little further.</p>
+<p>To do that we are gonna use <a href="https://golangbot.com/goroutines/#:~:text=Goroutines%20are%20functions%20or%20methods,thousands%20of%20Goroutines%20running%20concurrently."><code>goroutines</code></a>.
+We are also gonna use <code>sync</code> package from the standard library. We are gonna slightly tweak our <code>GetUserFromGithub</code>
+function.</p>
+<blockquote>
+<p>I&rsquo;m not gonna explain the workings of <code>sync</code> package.</p>
+</blockquote>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// main.go
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">wg</span> <span style="color:#a6e22e">sync</span>.<span style="color:#a6e22e">WaitGroup</span>
+<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">username</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">userResult</span> {
+    <span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">username</span>) &gt; <span style="color:#ae81ff">1</span> {
+        <span style="color:#a6e22e">wg</span>.<span style="color:#a6e22e">Add</span>(<span style="color:#ae81ff">1</span>)
+        <span style="color:#66d9ef">go</span> <span style="color:#a6e22e">cli</span>.<span style="color:#a6e22e">GetUserFromGithub</span>(<span style="color:#a6e22e">username</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">wg</span>)
+    }
+}
+<span style="color:#a6e22e">wg</span>.<span style="color:#a6e22e">Wait</span>()
+</code></pre></div><p><!-- raw HTML omitted --></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">GetUserFromGithub</span>(<span style="color:#a6e22e">name</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">wg</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">sync</span>.<span style="color:#a6e22e">WaitGroup</span>) {
+
+	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">responseBody</span> <span style="color:#a6e22e">Response</span>
+
+	<span style="color:#a6e22e">resp</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">Get</span>(<span style="color:#a6e22e">baseURL</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">name</span>)
+	<span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">resp</span>.<span style="color:#a6e22e">Body</span>.<span style="color:#a6e22e">Close</span>()
+
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;The HTTP request failed with error %s\n&#34;</span>, <span style="color:#a6e22e">err</span>)
+		<span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Exit</span>(<span style="color:#ae81ff">1</span>)
+	}
+
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">resp</span>.<span style="color:#a6e22e">StatusCode</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">200</span> {
+		<span style="color:#a6e22e">responseData</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">ioutil</span>.<span style="color:#a6e22e">ReadAll</span>(<span style="color:#a6e22e">resp</span>.<span style="color:#a6e22e">Body</span>)
+		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+			<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;Failed reading data from the response %s\n&#34;</span>, <span style="color:#a6e22e">err</span>)
+			<span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Exit</span>(<span style="color:#ae81ff">1</span>)
+		}
+
+		<span style="color:#a6e22e">json</span>.<span style="color:#a6e22e">Unmarshal</span>(<span style="color:#a6e22e">responseData</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">responseBody</span>)
+
+		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;#######################################&#34;</span>)
+		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;Name: &#34;</span>, <span style="color:#a6e22e">responseBody</span>.<span style="color:#a6e22e">Name</span>)
+		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;Login: &#34;</span>, <span style="color:#a6e22e">responseBody</span>.<span style="color:#a6e22e">Login</span>)
+		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;Avatar: &#34;</span>, <span style="color:#a6e22e">responseBody</span>.<span style="color:#a6e22e">Avatar</span>)
+		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;URL: &#34;</span>, <span style="color:#a6e22e">responseBody</span>.<span style="color:#a6e22e">URL</span>)
+		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;Company: &#34;</span>, <span style="color:#a6e22e">responseBody</span>.<span style="color:#a6e22e">Company</span>)
+		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;Location: &#34;</span>, <span style="color:#a6e22e">responseBody</span>.<span style="color:#a6e22e">Location</span>)
+		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;Bio: &#34;</span>, <span style="color:#a6e22e">responseBody</span>.<span style="color:#a6e22e">Bio</span>)
+		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;Followers: &#34;</span>, <span style="color:#a6e22e">responseBody</span>.<span style="color:#a6e22e">Followers</span>)
+		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;Following: &#34;</span>, <span style="color:#a6e22e">responseBody</span>.<span style="color:#a6e22e">Following</span>)
+		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;########################################&#34;</span>)
+	} <span style="color:#66d9ef">else</span> {
+		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;%s not found\n&#34;</span>, <span style="color:#a6e22e">name</span>)
+	}
+    <span style="color:#a6e22e">wg</span>.<span style="color:#a6e22e">Done</span>()
+}
+</code></pre></div><p><img src="/github-cli-with-goroutine.gif" alt="github-cli-with-goroutine"></p>
+<p>From the above image you can see the difference of using <code>goroutines</code>. Since for every <code>username</code> a new <code>goroutine</code> 
+will <code>spawn</code>, Making the program <code>concurrent</code>. You can see that the order of the output is random for every run.
+That&rsquo;s because whatever <code>goroutine</code> gets finished first it will output the result.</p>
+<p>Voila! That&rsquo;s it we made our program run concurrently by using <code>goroutine</code>.</p>
+<h1 id="conclusion">Conclusion<a href="#conclusion" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<p>We can then install it by running <code>go install</code>. To Take it one step further we can add it to the
+<strong><code>environment variables</code></strong> in <strong><code>windows</code></strong>, and you can write <code>tests</code>. If you want to learn more about 
+<code>sync</code> and <code>goroutines</code> there are lots of youtube videos out there.</p>
+<p>If you have different approach please ping me through any one of the <a href="https://m-krishna.github.io/about/">medium</a>.</p>
+<p>~ Happy Hacking!</p>
+
+      </div></div>
+
+  
+  
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h">Read other posts</span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        
+        <span class="button next">
+            <a href="/posts/create-ls-command-with-golang/">
+                <span class="button__text">Creating ls Command With Golang</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
+    </div>
+</div>
+
+  
+
+  
+
+</div>
+
+  </div>
+
+  
+    <footer class="footer">
+    <div class="footer__inner">
+        
+            <div class="copyright">
+                <span>© 2020 Powered by <a href="http://gohugo.io">Hugo</a> 😍</span>
+                
+            </div>
+        </div>
+</footer>
+
+<script src="/assets/main.js"></script>
+<script src="/assets/prism.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

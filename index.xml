@@ -6,10 +6,20 @@
     <description>Recent content on Welcome</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 10 Jun 2020 19:39:54 +0530</lastBuildDate>
+    <lastBuildDate>Mon, 15 Jun 2020 10:43:59 +0530</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Creating CLI With Golang</title>
+      <link>/posts/create-cli-with-golang/</link>
+      <pubDate>Mon, 15 Jun 2020 10:43:59 +0530</pubDate>
+      
+      <guid>/posts/create-cli-with-golang/</guid>
+      <description>This post shows you how to create a cli (Command Line Interface) in golang. We are gonna use Github&#39;s public API to create a github-cli, which shows you info about users. We are not gonna use any third party packages.
+ source code for this post https://github.com/M-krishna/github-cli Introduction The goal here is to capture the usernames from the argument and iterate over it until the data fetched from the server. We will make the fetching process concurrent by using Goroutines.</description>
+    </item>
     
     <item>
       <title>Creating ls Command With Golang</title>
