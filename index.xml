@@ -2,41 +2,41 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Welcome</title>
-    <link>/</link>
+    <link>https://m-krishna.github.io/</link>
     <description>Recent content on Welcome</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 15 Jun 2020 10:43:59 +0530</lastBuildDate>
     
-	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://m-krishna.github.io/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Creating CLI With Golang</title>
-      <link>/posts/create-cli-with-golang/</link>
+      <link>https://m-krishna.github.io/posts/create-cli-with-golang/</link>
       <pubDate>Mon, 15 Jun 2020 10:43:59 +0530</pubDate>
       
-      <guid>/posts/create-cli-with-golang/</guid>
+      <guid>https://m-krishna.github.io/posts/create-cli-with-golang/</guid>
       <description>This post shows you how to create a cli (Command Line Interface) in golang. We are gonna use Github&#39;s public API to create a github-cli, which shows you info about users. We are not gonna use any third party packages.
  source code for this post https://github.com/M-krishna/github-cli Introduction The goal here is to capture the usernames from the argument and iterate over it until the data fetched from the server. We will make the fetching process concurrent by using Goroutines.</description>
     </item>
     
     <item>
       <title>Creating ls Command With Golang</title>
-      <link>/posts/create-ls-command-with-golang/</link>
+      <link>https://m-krishna.github.io/posts/create-ls-command-with-golang/</link>
       <pubDate>Wed, 10 Jun 2020 19:39:54 +0530</pubDate>
       
-      <guid>/posts/create-ls-command-with-golang/</guid>
+      <guid>https://m-krishna.github.io/posts/create-ls-command-with-golang/</guid>
       <description>This post shows you how to create ls (list) command in golang. You may be already familiar with this command in linux and windows (powershell). We are not gonna use any third party packages.
  source code for this post https://github.com/M-krishna/ls Introduction The basic usage of ls command is to list all the files and folders inside a directory. We are also gonna add some additional info such as total number of files and directories.</description>
     </item>
     
     <item>
       <title>About</title>
-      <link>/about/</link>
+      <link>https://m-krishna.github.io/about/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/about/</guid>
+      <guid>https://m-krishna.github.io/about/</guid>
       <description>Hey There! I&amp;rsquo;m Krishna. I&amp;rsquo;m a Full Stack Web Developer from TamilNadu, India.
 I like to build stuffs using technology, even if its already built.
 I have worked on these following technologies.

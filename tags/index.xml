@@ -2,84 +2,84 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Welcome</title>
-    <link>/tags/</link>
+    <link>https://m-krishna.github.io/tags/</link>
     <description>Recent content in Tags on Welcome</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 15 Jun 2020 10:43:59 +0530</lastBuildDate>
     
-	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://m-krishna.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>cli</title>
-      <link>/tags/cli/</link>
+      <link>https://m-krishna.github.io/tags/cli/</link>
       <pubDate>Mon, 15 Jun 2020 10:43:59 +0530</pubDate>
       
-      <guid>/tags/cli/</guid>
+      <guid>https://m-krishna.github.io/tags/cli/</guid>
       <description></description>
     </item>
     
     <item>
       <title>concurrency</title>
-      <link>/tags/concurrency/</link>
+      <link>https://m-krishna.github.io/tags/concurrency/</link>
       <pubDate>Mon, 15 Jun 2020 10:43:59 +0530</pubDate>
       
-      <guid>/tags/concurrency/</guid>
+      <guid>https://m-krishna.github.io/tags/concurrency/</guid>
       <description></description>
     </item>
     
     <item>
       <title>github</title>
-      <link>/tags/github/</link>
+      <link>https://m-krishna.github.io/tags/github/</link>
       <pubDate>Mon, 15 Jun 2020 10:43:59 +0530</pubDate>
       
-      <guid>/tags/github/</guid>
+      <guid>https://m-krishna.github.io/tags/github/</guid>
       <description></description>
     </item>
     
     <item>
       <title>golang</title>
-      <link>/tags/golang/</link>
+      <link>https://m-krishna.github.io/tags/golang/</link>
       <pubDate>Mon, 15 Jun 2020 10:43:59 +0530</pubDate>
       
-      <guid>/tags/golang/</guid>
+      <guid>https://m-krishna.github.io/tags/golang/</guid>
       <description></description>
     </item>
     
     <item>
       <title>goroutines</title>
-      <link>/tags/goroutines/</link>
+      <link>https://m-krishna.github.io/tags/goroutines/</link>
       <pubDate>Mon, 15 Jun 2020 10:43:59 +0530</pubDate>
       
-      <guid>/tags/goroutines/</guid>
+      <guid>https://m-krishna.github.io/tags/goroutines/</guid>
       <description></description>
     </item>
     
     <item>
       <title>go</title>
-      <link>/tags/go/</link>
+      <link>https://m-krishna.github.io/tags/go/</link>
       <pubDate>Wed, 10 Jun 2020 19:39:54 +0530</pubDate>
       
-      <guid>/tags/go/</guid>
+      <guid>https://m-krishna.github.io/tags/go/</guid>
       <description></description>
     </item>
     
     <item>
       <title>ls</title>
-      <link>/tags/ls/</link>
+      <link>https://m-krishna.github.io/tags/ls/</link>
       <pubDate>Wed, 10 Jun 2020 19:39:54 +0530</pubDate>
       
-      <guid>/tags/ls/</guid>
+      <guid>https://m-krishna.github.io/tags/ls/</guid>
       <description></description>
     </item>
     
     <item>
       <title>windows</title>
-      <link>/tags/windows/</link>
+      <link>https://m-krishna.github.io/tags/windows/</link>
       <pubDate>Wed, 10 Jun 2020 19:39:54 +0530</pubDate>
       
-      <guid>/tags/windows/</guid>
+      <guid>https://m-krishna.github.io/tags/windows/</guid>
       <description></description>
     </item>
     

@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>windows on Welcome</title>
-    <link>/tags/windows/</link>
+    <link>https://m-krishna.github.io/tags/windows/</link>
     <description>Recent content in windows on Welcome</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 10 Jun 2020 19:39:54 +0530</lastBuildDate>
     
-	<atom:link href="/tags/windows/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://m-krishna.github.io/tags/windows/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Creating ls Command With Golang</title>
-      <link>/posts/create-ls-command-with-golang/</link>
+      <link>https://m-krishna.github.io/posts/create-ls-command-with-golang/</link>
       <pubDate>Wed, 10 Jun 2020 19:39:54 +0530</pubDate>
       
-      <guid>/posts/create-ls-command-with-golang/</guid>
+      <guid>https://m-krishna.github.io/posts/create-ls-command-with-golang/</guid>
       <description>This post shows you how to create ls (list) command in golang. You may be already familiar with this command in linux and windows (powershell). We are not gonna use any third party packages.
  source code for this post https://github.com/M-krishna/ls Introduction The basic usage of ls command is to list all the files and folders inside a directory. We are also gonna add some additional info such as total number of files and directories.</description>
     </item>
